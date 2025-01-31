@@ -12,6 +12,7 @@ from cart.views import CartViewSet
 from cartitem.views import CartItemViewSet
 from order.views import OrderViewSet 
 from review.views import ReviewViewSet
+from brand.views import BrandViewSet 
 
 # Import for swagger 
 from rest_framework import permissions
@@ -31,6 +32,7 @@ router.register(r'cart', CartViewSet, basename='Cart') # Cart API
 router.register(r'cart_item', CartItemViewSet, basename='CartItem') # CartItem API
 router.register(r'order', OrderViewSet, basename='Order') # Order API
 router.register(r'review', ReviewViewSet, basename='Review') # Review API
+router.register(r'brand', BrandViewSet, basename='Brand') # Brand API
 
 # Swagger Setting
 schema_view = get_schema_view(
@@ -61,7 +63,8 @@ urlpatterns = [
     path('cart/', include('cart.urls')), 
     path('cartitem/', include('cartitem.urls')),
     path('order/', include('order.urls')),
+    path('brand/', include('brand.urls')),
 
     # Router urls
     path('', include(router.urls)),
-]
+] 

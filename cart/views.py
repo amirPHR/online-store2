@@ -5,9 +5,10 @@ from django_filters import rest_framework as filters
 from rest_framework.response import Response 
 from rest_framework import status 
 from rest_framework.permissions import IsAuthenticated 
+from rest_framework.views import APIView 
 
 # Import Serializer and Model 
-from .serializers import CartSerializer 
+from .serializers import CartSerializer, CountOfCartUserSerializer
 from .models import Cart 
 
 # Import Pagination class from core app 
@@ -55,3 +56,9 @@ class CartViewSet(ModelViewSet):
                         status = status.HTTP_403_FORBIDDEN 
                     )
         return super().create(request, *args, **kwargs)
+    
+class CountOfCartUserView(APIView):
+    def get(self, request, *args, **kwargs):
+        queryset = Cart.objects.select_related('user').all()
+        serializer = CountOfCartUserSerializer(queryset,many=True) 
+        return Response(serializer.data)

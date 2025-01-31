@@ -42,7 +42,7 @@ ORDERING = ['user__username']
 
 # UserProfile ViewSet 
 class UserProfileViewSet(ModelViewSet): 
-    queryset = UserProfile.objects.all() 
+    queryset = UserProfile.objects.select_related('user').all() 
     serializer_class = UserProfileSerializer
     filter_backends = FILTER_BACKEND
     search_fields = SEARCH_FIELDS
