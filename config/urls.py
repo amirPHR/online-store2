@@ -9,10 +9,10 @@ from user.views import UserProfileViewSet, UserViewSet
 from product.views import ProductViewSet
 from category.views import CategoryViewSet 
 from cart.views import CartViewSet 
-from cartitem.views import CartItemViewSet
 from order.views import OrderViewSet 
 from review.views import ReviewViewSet
 from brand.views import BrandViewSet 
+from cartitem.views import CartItemViewSet
 
 # Import for swagger 
 from rest_framework import permissions
@@ -29,7 +29,7 @@ router.register(r'userprofile', UserProfileViewSet, basename='User_Profile') # U
 router.register(r'product', ProductViewSet, basename='Product') # Product API 
 router.register(r'category', CategoryViewSet, basename='Category') # Category API 
 router.register(r'cart', CartViewSet, basename='Cart') # Cart API
-router.register(r'cart_item', CartItemViewSet, basename='CartItem') # CartItem API
+router.register(r'cartitem', CartItemViewSet, basename='CartItem') # CartItem API
 router.register(r'order', OrderViewSet, basename='Order') # Order API
 router.register(r'review', ReviewViewSet, basename='Review') # Review API
 router.register(r'brand', BrandViewSet, basename='Brand') # Brand API

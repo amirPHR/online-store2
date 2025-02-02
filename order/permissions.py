@@ -11,7 +11,7 @@ class IsUserOrAnonymousUser(BasePermission):
         user = request.user 
         data = request.data 
 
-        if view.action in ['create', 'update', 'partial_update']:
+        if view.action in ['create', 'destroy', 'update', 'partial_update']:
             if not user.is_staff:
                 if 'user' in data: 
                     if int(data['user']) != user.id:

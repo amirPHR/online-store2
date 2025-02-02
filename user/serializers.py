@@ -12,3 +12,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ['user', 'national_code', 'address', 'birth_date', 'job']
         model = UserProfile
+
+# FullProfile of User
+class FullProfileOfUsersSerializer(serializers.ModelSerializer):
+    user = UserCreateSerializer()
+    class Meta:
+        fields = ['user', 'national_code', 'address', 'birth_date', 'job']
+        model = UserProfile

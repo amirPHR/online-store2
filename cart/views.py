@@ -1,37 +1,35 @@
 # Import RestFramework libraries 
 from rest_framework.viewsets import ModelViewSet 
 from django_filters.rest_framework import DjangoFilterBackend
-from django_filters import rest_framework as filters
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response 
 from rest_framework import status 
 from rest_framework.permissions import IsAuthenticated 
-from rest_framework.views import APIView 
 
 # Import Serializer and Model 
-from .serializers import CartSerializer, CountOfCartUserSerializer
+from .serializers import CartSerializer
 from .models import Cart 
 
 # Import Pagination class from core app 
 from core.pagination import DefaultPagination 
 
 # Filter Backend list 
-FILTER_BACKEND = [DjangoFilterBackend]
+FILTER_BACKEND = [DjangoFilterBackend, SearchFilter, OrderingFilter]
 
-# FilterSet class 
-class CartFilterSet(filters.FilterSet):
-    status = filters.CharFilter(field_name='status', lookup_expr='icontains')
-
-    class Meta:
-        fields = ['status']
-        model = Cart 
+# Constant for Searching and Ordering filter
+SEARCH_FIELDS = ['user__username', 'user__first_name', 'user__last_name']
+ORDERING_FIELDS = ['status']
+DEFAULT_ORDERING = ['user__id']
 
 # Cart ViewSet 
 class CartViewSet(ModelViewSet):
     queryset = Cart.objects.all() 
     serializer_class = CartSerializer 
-    pagination_class = DefaultPagination 
-    filterset_class = CartFilterSet
     filter_backends = FILTER_BACKEND
+    search_fields = SEARCH_FIELDS
+    ordering_fields = ORDERING_FIELDS 
+    ordering = DEFAULT_ORDERING
+    pagination_class = DefaultPagination 
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -56,9 +54,3 @@ class CartViewSet(ModelViewSet):
                         status = status.HTTP_403_FORBIDDEN 
                     )
         return super().create(request, *args, **kwargs)
-    
-class CountOfCartUserView(APIView):
-    def get(self, request, *args, **kwargs):
-        queryset = Cart.objects.select_related('user').all()
-        serializer = CountOfCartUserSerializer(queryset,many=True) 
-        return Response(serializer.data)

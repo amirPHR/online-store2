@@ -1,14 +1,15 @@
 # Import Restframework libraries 
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend 
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status 
 from rest_framework.response import Response 
 
 # Import Model and serializer
 from .models import UserProfile, User 
-from .serializers import UserProfileSerializer, UserCreateSerializer
+from .serializers import UserProfileSerializer, UserCreateSerializer, FullProfileOfUsersSerializer
 
 # Import Pagination class from core app
 from core.pagination import DefaultPagination
@@ -68,3 +69,12 @@ class UserProfileViewSet(ModelViewSet):
                     status=status.HTTP_403_FORBIDDEN 
                 )
         return super().create(request, *args, **kwargs)
+
+# Full Profile of Users View
+class FullProfileOfUsersView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, *args, **kwargs):
+        queryset = UserProfile.objects.select_related('user').all()
+        serializer = FullProfileOfUsersSerializer(queryset, many=True)
+        return Response(serializer.data)

@@ -2,7 +2,6 @@
 from rest_framework.views import APIView
 import django_filters
 from django_filters.rest_framework import FilterSet 
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet 
 from django_filters.rest_framework import DjangoFilterBackend 
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -69,17 +68,13 @@ class BaseFilterProductView(APIView):
             queryset = queryset.filter(category__name = category)      
 
         return queryset    
-    
-    def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset, many=True) 
-        return Response(serializer.data)
 
 # CheapProduct View
 class CheapProductView(BaseFilterProductView):
     """
     If ProductPrice > 300.00.This is a CheapProduct
     """
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = CheapProductSerializer 
     filter_conditions = {'price__lte':300.00}
     
@@ -88,5 +83,6 @@ class DiscountedProductView(BaseFilterProductView):
     """
     If ProductPrice < 5000.00.discounted 30%
     """
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = DiscountProductSerializer 
     filter_conditions = {'price__gte':5000.00}
